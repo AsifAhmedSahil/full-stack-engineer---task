@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #377dff;
+}
+
+/* ============================================================
+   IMPORTANT: Do NOT override ._main_layout height/overflow.
+   The app uses panel-based independent column scrolling.
+   ============================================================ */
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ── Profile initials fallback ────────────────────────────── */
+._nav_profile_initials {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background-color: #377DFF;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Dark mode icon switching ─────────────────────────────── */
+._layout_change_btn_ic2 { display: none; }
+._dark_wrapper ._layout_change_btn_ic1 { display: none; }
+._dark_wrapper ._layout_change_btn_ic2 { display: block; }
+
+/* ── Profile dropdown ─────────────────────────────────────── */
+/* Handled by React state */
+
+/* ── Like / reaction active state ────────────────────────── */
+._feed_inner_timeline_reaction_emoji._feed_reaction_active span,
+._feed_inner_timeline_reaction_emoji._feed_reaction_active svg path,
+._feed_inner_timeline_reaction_emoji._feed_reaction_active svg {
+  color: #377DFF !important;
+  stroke: #377DFF !important;
+}
+
+._timline_comment_txt_link._active { color: #377DFF !important; }
+
+/* ── Reply form ───────────────────────────────────────────── */
+._reply_form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+._comment_reply_input {
+  flex: 1;
+  border-radius: 20px !important;
+  font-size: 13px;
+  padding: 6px 14px !important;
+  border: 1px solid #eee !important;
+}
+._reply_submit_btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+._reply_item {
+  margin-left: 40px;
+  margin-top: 8px;
+}
+
+/* ── Dark mode text / background overrides ────────────────── */
+._dark_wrapper ._timline_comment_txt_title,
+._dark_wrapper ._timline_comment_txt_para,
+._dark_wrapper ._timline_comment_txt_link,
+._dark_wrapper ._timline_comment_txt_time,
+._dark_wrapper ._feed_inner_timeline_post_box_title,
+._dark_wrapper ._feed_inner_timeline_post_box_para,
+._dark_wrapper ._feed_inner_timeline_post_main_para,
+._dark_wrapper ._feed_inner_timeline_total_reacts_para,
+._dark_wrapper ._feed_inner_timeline_total_reacts_para1,
+._dark_wrapper ._left_inner_area_explore_title,
+._dark_wrapper ._left_inner_area_explore_link,
+._dark_wrapper ._right_inner_area_info_content_title,
+._dark_wrapper ._right_inner_area_info_box_title,
+._dark_wrapper ._right_inner_area_info_box_para,
+._dark_wrapper ._feed_right_inner_area_card_content_title,
+._dark_wrapper ._feed_right_inner_area_card_ppl_title,
+._dark_wrapper ._feed_right_inner_area_card_ppl_para,
+._dark_wrapper ._left_inner_area_suggest_info_title,
+._dark_wrapper ._left_inner_area_suggest_info_para,
+._dark_wrapper ._header_nav_para,
+._dark_wrapper ._nav_dropdown_title,
+._dark_wrapper ._feed_inner_timeline_reaction span,
+._dark_wrapper ._feed_inner_timeline_reaction svg path,
+._dark_wrapper ._feed_inner_comment_box_content_txt textarea,
+._dark_wrapper ._feed_textarea_label,
+._dark_wrapper ._comment_textarea::placeholder,
+._dark_wrapper ._textarea::placeholder {
+  color: #e4e6eb !important;
+}
+
+._dark_wrapper ._feed_inner_comment_box_content_txt textarea,
+._dark_wrapper ._comment_reply_input,
+._dark_wrapper ._feed_inner_text_area_box_form textarea {
+  background-color: #3a3b3c !important;
+  border-color: #4e4f50 !important;
+  color: #e4e6eb !important;
+}
+
+._dark_wrapper ._textarea::placeholder,
+._dark_wrapper ._comment_textarea::placeholder,
+._dark_wrapper ._comment_reply_input::placeholder {
+  color: #b0b3b8 !important;
+}
+
+._dark_wrapper ._feed_inner_timeline_reaction svg path[stroke="#000"],
+._dark_wrapper ._feed_inner_timeline_reaction svg path[stroke="#000"]:not([fill]) {
+  stroke: #e4e6eb !important;
+}
+._dark_wrapper ._feed_inner_timeline_reaction svg path[stroke="#000"][stroke-linejoin] {
+  stroke: #e4e6eb !important;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+._layout_left_sidebar_wrap::-webkit-scrollbar,
+._layout_middle_wrap::-webkit-scrollbar,
+._layout_right_sidebar_wrap::-webkit-scrollbar {
+  width: 4px;
+}
+._layout_left_sidebar_wrap::-webkit-scrollbar-thumb,
+._layout_middle_wrap::-webkit-scrollbar-thumb,
+._layout_right_sidebar_wrap::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.12);
+  border-radius: 4px;
+}
