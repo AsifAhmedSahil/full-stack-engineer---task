@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -24,9 +25,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href="/assets/css/responsive.css" />
       </head>
       <body suppressHydrationWarning className={`${poppins.variable} font-poppins`}>
-        
+        <ThemeProvider>
           {children}
-     
+        </ThemeProvider>
       </body>
     </html>
   );
