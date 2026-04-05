@@ -376,7 +376,7 @@ const handleEdit = async () => {
                   {saving ? 'Saving…' : 'Save'}
                 </button>
                 <button onClick={() => { setEditing(false); setEditContent(content); setEditVisibility(visibility); setEditImages(imageUrls); setEditNewFiles([]) }}
-                  style={{ padding: '6px 14px', background: 'none', border: '1px solid #ccc', borderRadius: 6, cursor: 'pointer', fontSize: 13 }}>Cancel</button>
+                  style={{ padding: '6px 14px', background: 'none', color: '#fff', border: '1px solid #ccc', borderRadius: 6, cursor: 'pointer', fontSize: 13 }}>Cancel</button>
               </div>
             </div>
           ) : (
