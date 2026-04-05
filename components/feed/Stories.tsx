@@ -113,38 +113,67 @@ export default function Stories({ currentUser }: {
     setStoryFile(f); setStoryPreview(URL.createObjectURL(f))
   }
 
-  const handleAddStory = async () => {
-    if (storyType === 'photo' && !storyFile) return
-    if (storyType === 'text'  && !storyText.trim()) return
-    setUploading(true)
-    try {
-      let imageUrl: string | null = null
-      if (storyType === 'photo' && storyFile) {
-        const fd = new FormData(); fd.append('file', storyFile)
-        const res = await fetch('/api/upload', { method: 'POST', body: fd })
-        if (res.ok) { const d = await res.json(); imageUrl = d.url }
-      }
+const handleAddStory = async () => {
+  // Validation
+  if (storyType === 'photo' && !storyFile) return
+  if (storyType === 'text' && !storyText.trim()) return
 
-      const res = await fetch('/api/stories', {
+  setUploading(true)
+
+  try {
+    let imageUrl: string | null = null
+
+    // Photo story upload to Cloudinary
+    if (storyType === 'photo' && storyFile) {
+      const fd = new FormData()
+      fd.append('file', storyFile)
+
+      const res = await fetch('/api/uploadcloudinary', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: storyType,
-          imageUrl,
-          text: storyType === 'text' ? storyText.trim() : null,
-          bgColor: storyType === 'text' ? storyBg : null,
-        }),
+        body: fd,
       })
 
+      
+
       if (res.ok) {
-        const newStory: Story = await res.json()
-        setStories(prev => [newStory, ...prev])
+        const data = await res.json()
+        imageUrl = data.url
+      } else {
+        const errorData = await res.json()
+        console.error('Story image upload failed:', errorData)
       }
 
-      setShowAddModal(false); setStoryText(''); setStoryFile(null)
-      if (storyPreview) URL.revokeObjectURL(storyPreview); setStoryPreview(null)
-    } finally { setUploading(false) }
+      
+    }
+
+    // Create story in DB
+    const res = await fetch('/api/stories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: storyType,
+        imageUrl,
+        text: storyType === 'text' ? storyText.trim() : null,
+        bgColor: storyType === 'text' ? storyBg : null,
+      }),
+    })
+
+    if (res.ok) {
+      const newStory: Story = await res.json()
+      setStories(prev => [newStory, ...prev])
+    }
+
+    // Reset modal & preview
+    setShowAddModal(false)
+    setStoryText('')
+    setStoryFile(null)
+    if (storyPreview) URL.revokeObjectURL(storyPreview)
+    setStoryPreview(null)
+
+  } finally {
+    setUploading(false)
   }
+}
 
  
   const handleDeleteStory = async (id: string) => {
