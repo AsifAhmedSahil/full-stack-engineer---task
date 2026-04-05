@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const protectedPaths = ['/feed']
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   const isProtected = protectedPaths.some((p) => pathname.startsWith(p))
