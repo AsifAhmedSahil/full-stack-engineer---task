@@ -8,7 +8,7 @@ BuddyScript is a modern social media platform built as a full-stack technical as
 
 | Layer | Technology |
 |---|---|
-| **Framework** | Next.js 15 (App Router) |
+| **Framework** | Next.js 16 (App Router) |
 | **Language** | TypeScript |
 | **Styling** | Bootstrap 5 + Custom CSS (`main.css`, `common.css`, `responsive.css`) |
 | **Backend** | Next.js API Routes (Serverless) |
