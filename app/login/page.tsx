@@ -7,7 +7,6 @@ import Image from 'next/image'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -27,7 +26,7 @@ export default function LoginPage() {
       } else {
         setError(data.error || 'Login failed')
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.')
     } finally {
       setLoading(false)
@@ -35,177 +34,133 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="_social_login_wrapper _layout_main_wrapper">
-      {/* Shape decorations */}
-      <div className="_shape_one">
-        <Image src="/assets/images/shape1.svg" alt="" width={300} height={300} className="_shape_img" />
-        <Image src="/assets/images/dark_shape.svg" alt="" width={300} height={300} className="_dark_shape" />
-      </div>
-      <div className="_shape_two">
-        <Image src="/assets/images/shape2.svg" alt="" width={300} height={300} className="_shape_img" />
-        <Image src="/assets/images/dark_shape1.svg" alt="" width={300} height={300} className="_dark_shape _dark_shape_opacity" />
-      </div>
-      <div className="_shape_three">
-        <Image src="/assets/images/shape3.svg" alt="" width={300} height={300} className="_shape_img" />
-        <Image src="/assets/images/dark_shape2.svg" alt="" width={300} height={300} className="_dark_shape _dark_shape_opacity" />
-      </div>
+    <>
+      <style>{`
+        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+        .auth-outer {
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--bg1, #f5f7fb);
+          position: relative;
+          overflow: hidden;
+        }
+        .auth-inner {
+          width: 100%;
+          max-width: 1200px;
+          display: flex;
+          align-items: center;
+          padding: 0 20px;
+          gap: 0;
+        }
+        .auth-illustration {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .auth-illustration img { max-width: 100%; max-height: 70vh; object-fit: contain; }
+        .auth-form-col {
+          width: 380px;
+          flex-shrink: 0;
+        }
+        @media (max-width: 991px) {
+          .auth-illustration { display: none; }
+          .auth-form-col { width: 100%; max-width: 420px; margin: 0 auto; }
+        }
+      `}</style>
 
-      <div className="_social_login_wrap">
-        <div className="container">
-          <div className="row align-items-center">
+      <section className="_social_login_wrapper auth-outer" style={{ padding: 0 }}>
+        {/* Shapes */}
+        <div className="_shape_one" style={{ position: 'absolute', zIndex: 0 }}>
+          <Image src="/assets/images/shape1.svg" alt="" width={280} height={280} className="_shape_img" />
+          <Image src="/assets/images/dark_shape.svg" alt="" width={280} height={280} className="_dark_shape" />
+        </div>
+        <div className="_shape_two" style={{ position: 'absolute', zIndex: 0 }}>
+          <Image src="/assets/images/shape2.svg" alt="" width={280} height={280} className="_shape_img" />
+          <Image src="/assets/images/dark_shape1.svg" alt="" width={280} height={280} className="_dark_shape _dark_shape_opacity" />
+        </div>
+        <div className="_shape_three" style={{ position: 'absolute', zIndex: 0 }}>
+          <Image src="/assets/images/shape3.svg" alt="" width={280} height={280} className="_shape_img" />
+          <Image src="/assets/images/dark_shape2.svg" alt="" width={280} height={280} className="_dark_shape _dark_shape_opacity" />
+        </div>
 
-            {/* Left: Illustration */}
-            <div className="col-xl-8 col-lg-8 col-md-12 col-sm-12">
-              <div className="_social_login_left">
-                <div className="_social_login_left_image">
-                  <Image
-                    src="/assets/images/login.png"
-                    alt="Image"
-                    width={633}
-                    height={500}
-                    className="_left_img"
-                    priority
-                  />
-                </div>
+        <div className="auth-inner" style={{ position: 'relative', zIndex: 1 }}>
+          {/* Left — illustration */}
+          <div className="auth-illustration">
+            <div>
+              <div className="_social_login_left_image">
+                <Image src="/assets/images/login.png" alt="Login" width={580} height={450}
+                  priority style={{ maxWidth: '100%', maxHeight: '65vh', objectFit: 'contain' }} />
               </div>
             </div>
+          </div>
 
-            {/* Right: Login Form */}
-            <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12">
-              <div className="_social_login_content">
+          {/* Right — form card */}
+          <div className="auth-form-col">
+            <div className="_social_registration_content">
+              {/* Logo */}
+              <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                <Image src="/assets/images/logo.svg" alt="BuddyScript" width={150} height={38} className="_right_logo" />
+              </div>
 
-                {/* Logo */}
-                <div className="_social_login_left_logo _mar_b28">
-                  <Image
-                    src="/assets/images/logo.svg"
-                    alt="Image"
-                    width={161}
-                    height={40}
-                    className="_left_logo"
-                  />
+              <p className="_social_registration_content_para" style={{ marginBottom: 4 }}>Welcome back</p>
+              <h4 className="_social_registration_content_title _titl4" style={{ marginBottom: 32, fontSize: 26 }}>
+                Login to your account
+              </h4>
+
+              {/* Google */}
+              <button type="button" className="_social_registration_content_btn" style={{ marginBottom: 24 }}>
+                <Image src="/assets/images/google.svg" alt="Google" width={20} height={20} className="_google_img" />
+                <span>Continue with Google</span>
+              </button>
+
+              <div className="_social_registration_content_bottom_txt" style={{ marginBottom: 24 }}><span>Or</span></div>
+
+              <form onSubmit={handleSubmit}>
+                <div className="_social_registration_form_input" style={{ marginBottom: 14 }}>
+                  <label className="_social_registration_label" style={{ marginBottom: 6, display: 'block' }}>Email</label>
+                  <input type="email" className="form-control _social_registration_input"
+                    style={{ height: 46 }}
+                    placeholder="Enter your email"
+                    value={email} onChange={e => setEmail(e.target.value)} required />
                 </div>
 
-                <p className="_social_login_content_para _mar_b8">Welcome back</p>
-                <h4 className="_social_login_content_title _titl4 _mar_b50">Login to your account</h4>
+                <div className="_social_registration_form_input" style={{ marginBottom: 8 }}>
+                  <label className="_social_registration_label" style={{ marginBottom: 6, display: 'block' }}>Password</label>
+                  <input type="password" className="form-control _social_registration_input"
+                    style={{ height: 46 }}
+                    placeholder="Enter your password"
+                    value={password} onChange={e => setPassword(e.target.value)} required />
+                </div>
 
-                {/* Google Sign-in Button */}
-                <button
-                  type="button"
-                  className="_social_login_content_btn _mar_b40"
-                  onClick={() => {/* Google OAuth handler */}}
-                >
-                  <Image
-                    src="/assets/images/google.svg"
-                    alt="Image"
-                    width={20}
-                    height={20}
-                    className="_google_img"
-                  />
-                  <span>Or sign-in with google</span>
+                <div style={{ textAlign: 'right', marginBottom: 20 }}>
+                  <a href="#0" style={{ fontSize: 13, color: '#1890FF', fontWeight: 500 }}>Forgot password?</a>
+                </div>
+
+                {error && <p className="text-danger" style={{ fontSize: 13, marginBottom: 10 }}>{error}</p>}
+
+                <button type="submit" className="_social_registration_form_btn_link _btn1"
+                  disabled={loading} style={{ width: '100%', marginBottom: 24 ,whiteSpace: "nowrap",textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center' }}>
+                  {loading ? 'Logging in…' : 'Login now'}
                 </button>
+              </form>
 
-                {/* Divider */}
-                <div className="_social_login_content_bottom_txt _mar_b40">
-                  <span>Or</span>
-                </div>
-
-                {/* Login Form */}
-                <form className="_social_login_form" onSubmit={handleSubmit}>
-                  <div className="row">
-                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                      <div className="_social_login_form_input _mar_b14">
-                        <label className="_social_login_label _mar_b8">Email</label>
-                        <input
-                          type="email"
-                          className="form-control _social_login_input"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                      <div className="_social_login_form_input _mar_b14">
-                        <label className="_social_login_label _mar_b8">Password</label>
-                        <input
-                          type="password"
-                          className="form-control _social_login_input"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12">
-                      <div className="form-check _social_login_form_check">
-                        <input
-                          className="form-check-input _social_login_form_check_input"
-                          type="radio"
-                          name="flexRadioDefault"
-                          id="flexRadioDefault2"
-                          checked={rememberMe}
-                          onChange={() => setRememberMe(!rememberMe)}
-                        />
-                        <label
-                          className="form-check-label _social_login_form_check_label"
-                          htmlFor="flexRadioDefault2"
-                        >
-                          Remember me
-                        </label>
-                      </div>
-                    </div>
-                    <div className="col-lg-6 col-xl-6 col-md-6 col-sm-12">
-                      <div className="_social_login_form_left">
-                        <p className="_social_login_form_left_para">
-                          <Link href="/forgot-password">Forgot password?</Link>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {error && (
-                    <div className="row">
-                      <div className="col-12">
-                        <p className="text-danger mt-2">{error}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="row">
-                    <div className="col-lg-12 col-md-12 col-xl-12 col-sm-12">
-                      <div className="_social_login_form_btn _mar_t40 _mar_b60">
-                        <button
-                          type="submit"
-                          className="_social_login_form_btn_link _btn1"
-                          disabled={loading}
-                        >
-                          {loading ? 'Logging in...' : 'Login now'}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-
-                {/* Bottom: Register link */}
-                <div className="row">
-                  <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                    <div className="_social_login_bottom_txt">
-                      <p className="_social_login_bottom_txt_para">
-                        Dont have an account?{' '}
-                        <Link href="/register">Create New Account</Link>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
+              <div className="_social_registration_bottom_txt">
+                <p className="_social_registration_bottom_txt_para" style={{ fontSize: 13 }}>
+                  Don&apos;t have an account?{' '}
+                  <Link href="/register">Create New Account</Link>
+                </p>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }

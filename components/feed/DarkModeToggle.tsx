@@ -1,31 +1,32 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function DarkModeToggle() {
   const [isDark, setIsDark] = useState(false)
-  const wrapperRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
-    wrapperRef.current = document.querySelector('._layout_main_wrapper')
+    // Read saved preference
+    const saved = localStorage.getItem('darkMode') === 'true'
+    setIsDark(saved)
+    if (saved) {
+      document.body.classList.add('_dark_wrapper')
+      document.documentElement.classList.add('_dark_wrapper')
+    }
   }, [])
 
   const toggle = () => {
     const next = !isDark
     setIsDark(next)
-    if (next) {
-      document.documentElement.classList.add('dark')
-      wrapperRef.current?.classList.add('_dark_wrapper')
-    } else {
-      document.documentElement.classList.remove('dark')
-      wrapperRef.current?.classList.remove('_dark_wrapper')
-    }
+    localStorage.setItem('darkMode', String(next))
+    document.body.classList.toggle('_dark_wrapper', next)
+    document.documentElement.classList.toggle('_dark_wrapper', next)
   }
 
   return (
     <div className="_layout_mode_swithing_btn">
       <button type="button" className="_layout_swithing_btn_link" onClick={toggle}>
-        <div className="_layout_swithing_btn">
+        <div className={`_layout_swithing_btn${isDark ? ' _dark_mode_active' : ''}`}>
           <div className="_layout_swithing_btn_round"></div>
         </div>
         <div className="_layout_change_btn_ic1">

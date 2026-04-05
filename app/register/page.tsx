@@ -232,7 +232,10 @@ export default function RegisterPage() {
 
                     <div className="_social_registration_form_btn _mar_t16 _mar_b20">
                       <button type="submit" className="_social_registration_form_btn_link _btn1"
-                        disabled={loading} style={{ width: '100%' }}>
+                        disabled={loading} style={{ width: '100%', marginBottom: 24 ,whiteSpace: "nowrap",textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center' }}>
                         {loading ? 'Creating account…' : 'Register now'}
                       </button>
                     </div>
