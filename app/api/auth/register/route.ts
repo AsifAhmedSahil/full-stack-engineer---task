@@ -3,10 +3,9 @@ import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { setAuthCookie, signToken } from '@/lib/auth'
 
-
 export async function POST(req: NextRequest) {
   try {
-    const { firstName, lastName, email, password } = await req.json()
+    const { firstName, lastName, email, password, avatar } = await req.json()
 
     if (!firstName || !lastName || !email || !password) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
@@ -23,14 +22,20 @@ export async function POST(req: NextRequest) {
 
     const hashed = await bcrypt.hash(password, 12)
     const user = await prisma.user.create({
-      data: { firstName: firstName.trim(), lastName: lastName.trim(), email: emailTrimmed, password: hashed },
+      data: {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: emailTrimmed,
+        password: hashed,
+        avatar: avatar || null,   // ← optional profile photo
+      },
     })
 
     const token = signToken(user.id)
     const headers = setAuthCookie(token)
 
     return NextResponse.json(
-      { user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email } },
+      { user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, avatar: user.avatar } },
       { status: 201, headers }
     )
   } catch (err) {

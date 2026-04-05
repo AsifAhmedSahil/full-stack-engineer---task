@@ -104,7 +104,7 @@ body {
 ._dark_wrapper ._feed_inner_comment_box_content_txt textarea,
 ._dark_wrapper ._comment_reply_input,
 ._dark_wrapper ._feed_inner_text_area_box_form textarea {
-  background-color: #3a3b3c !important;
+  /* background-color: #3a3b3c !important; */
   border-color: #4e4f50 !important;
   color: #e4e6eb !important;
 }
