@@ -4,6 +4,15 @@ BuddyScript is a modern social media platform built as a full-stack technical as
 
 ---
 
+## 🔑 Test User Credentials
+
+For review purposes, you can use the following test accounts to log in:
+
+| User | Email                          | Password   |
+|------|--------------------------------|-----------|
+| 1    | asifahmedsahil.007@gmail.com   | 12345678  |
+| 2    | sahil.mpair@gmail.com           | 123456    |
+
 ## 🚀 Technology Stack
 
 | Layer | Technology |
