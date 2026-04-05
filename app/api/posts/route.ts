@@ -6,87 +6,160 @@ const postSelect = {
   id: true,
   content: true,
   imageUrl: true,
+  imageUrls: true, // ✅ added
   visibility: true,
   createdAt: true,
-  authorId: true,
-  author: { select: { id: true, firstName: true, lastName: true, avatar: true } },
-  likes: { select: { userId: true, user: { select: { id: true, firstName: true, lastName: true } } } },
+  author: {
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      avatar: true,
+    },
+  },
+  likes: {
+    select: {
+      userId: true,
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  },
   comments: {
     orderBy: { createdAt: 'asc' as const },
     select: {
       id: true,
       content: true,
       createdAt: true,
-      authorId: true,
-      author: { select: { id: true, firstName: true, lastName: true, avatar: true } },
-      likes: { select: { userId: true, user: { select: { id: true, firstName: true, lastName: true } } } },
+      imageUrl: true,
+      author: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          avatar: true,
+        },
+      },
+      likes: {
+        select: {
+          userId: true,
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      },
       replies: {
         orderBy: { createdAt: 'asc' as const },
         select: {
           id: true,
           content: true,
           createdAt: true,
-          author: { select: { id: true, firstName: true, lastName: true, avatar: true } },
-          likes: { select: { userId: true, user: { select: { id: true, firstName: true, lastName: true } } } },
+          author: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              avatar: true,
+            },
+          },
+          likes: {
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
         },
       },
     },
   },
-  _count: { select: { comments: true, likes: true } },
+  _count: {
+    select: {
+      comments: true,
+      likes: true,
+    },
+  },
 }
 
-// PATCH /api/posts/[id] — edit post (author only)
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+// ✅ GET POSTS
+export async function GET(req: NextRequest) {
   const user = await getCurrentUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const { searchParams } = new URL(req.url)
+  const cursor = searchParams.get('cursor')
+  const take = 10
 
-  const { id } = await params
-  const { content, visibility } = await req.json()
+  const where = user
+    ? {
+        OR: [
+          { visibility: 'public' },
+          { authorId: user.id },
+        ],
+      }
+    : { visibility: 'public' }
 
-  if (!content?.trim()) {
-    return NextResponse.json({ error: 'Content is required' }, { status: 400 })
+  const posts = await prisma.post.findMany({
+  where,
+  orderBy: { createdAt: 'desc' },
+  take,
+  ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+  select: postSelect,
+})
+
+// Calculate total comments including replies
+const postsWithTotalComments = posts.map((post) => {
+  const totalComments = post.comments.reduce((acc, comment) => {
+    return acc + 1 + (comment.replies?.length || 0)
+  }, 0)
+
+  return { ...post, totalComments }
+})
+
+const nextCursor =
+  posts.length === take ? posts[posts.length - 1].id : null
+
+return NextResponse.json({ posts: postsWithTotalComments, nextCursor })
+}
+
+// ✅ CREATE POST (FIXED 🔥)
+export async function POST(req: NextRequest) {
+  const user = await getCurrentUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const existing = await prisma.post.findUnique({
-    where: { id },
-    select: { authorId: true },
-  })
-  if (!existing) return NextResponse.json({ error: 'Post not found' }, { status: 404 })
-  if (existing.authorId !== user.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const { content, imageUrl, imageUrls, visibility } = await req.json()
 
-  const post = await prisma.post.update({
-    where: { id },
+  // ✅ allow post with only images
+  if (!content?.trim() && (!imageUrls || imageUrls.length === 0)) {
+    return NextResponse.json(
+      { error: 'Content or images required' },
+      { status: 400 }
+    )
+  }
+
+  const post = await prisma.post.create({
     data: {
-      content: content.trim(),
+      content: content?.trim() || '📷 Shared photos',
+      imageUrl: imageUrl || null,
+      imageUrls: imageUrls || [], // ✅ main fix
       visibility: visibility === 'private' ? 'private' : 'public',
+      authorId: user.id,
     },
     select: postSelect,
   })
 
-  return NextResponse.json({ post })
-}
-
-// DELETE /api/posts/[id] — delete post (author only)
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const user = await getCurrentUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const { id } = await params
-
-  const existing = await prisma.post.findUnique({
-    where: { id },
-    select: { authorId: true },
-  })
-  if (!existing) return NextResponse.json({ error: 'Post not found' }, { status: 404 })
-  if (existing.authorId !== user.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
-  await prisma.post.delete({ where: { id } })
-
-  return NextResponse.json({ success: true })
+  return NextResponse.json({ post }, { status: 201 })
 }

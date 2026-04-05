@@ -14,63 +14,68 @@ model User {
   email     String    @unique
   password  String
   avatar    String?
-  posts     Post[]
-  comments  Comment[]
-  replies   Reply[]
-  likes     Like[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  comments  Comment[]
+  likes     Like[]
+  posts     Post[]
+  replies   Reply[]
 }
 
 model Post {
-  id         String    @id @default(cuid())
+  id         String   @id @default(cuid())
   content    String
   imageUrl   String?
+  imageUrls  String[]   // ✅ correct
   visibility String    @default("public")
-  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId   String
-  comments   Comment[]
-  likes      Like[]
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  comments   Comment[]
+  likes      Like[]
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 model Comment {
   id        String   @id @default(cuid())
   content   String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  imageUrl  String?   // ✅ Make this optional
   postId    String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
-  replies   Reply[]
-  likes     Like[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  author    User     @relation(fields: [authorId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+  likes     Like[]
+  replies   Reply[]
 }
 
 model Reply {
   id        String   @id @default(cuid())
   content   String
-  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  imageUrl  String?   // ✅ ADD THIS
   commentId String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
-  likes     Like[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  likes     Like[]
+
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
 }
 
 model Like {
   id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String?
-  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String?
-  reply     Reply?   @relation(fields: [replyId], references: [id], onDelete: Cascade)
   replyId   String?
   createdAt DateTime @default(now())
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reply     Reply?   @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
   @@unique([userId, commentId])
