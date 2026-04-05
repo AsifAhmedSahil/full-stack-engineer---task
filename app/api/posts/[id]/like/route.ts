@@ -23,7 +23,7 @@ export async function POST(
 
   const likes = await prisma.like.findMany({
     where: { postId },
-    select: { userId: true, user: { select: { id: true, firstName: true, lastName: true } } },
+    select: { userId: true, user: { select: { id: true, firstName: true, lastName: true, avatar:true } } },
   })
 
   return NextResponse.json({ liked: !existing, likes })

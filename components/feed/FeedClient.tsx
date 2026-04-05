@@ -7,7 +7,7 @@ import PostCard from './PostCard'
 
 interface LikeUser {
   userId: string
-  user?: { id: string; firstName: string; lastName: string }
+  user?: { id: string; firstName: string; lastName: string ;avatar:string}
 }
 
 interface Reply {

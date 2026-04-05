@@ -29,7 +29,7 @@ interface Comment {
 }
 interface Post {
   id: string; content: string; imageUrl?: string | null
-  imageUrls?: string[]          // optional extra images
+  imageUrls?: string[]        
   visibility: string; createdAt: string; authorId: string
   author: { id: string; firstName: string; lastName: string; avatar?: string | null }
   likes: LikeUser[]; comments: Comment[]
@@ -117,7 +117,7 @@ function ShareModal({ postId, onClose, onShared }: { postId: string; onClose: ()
             </div>
             <span style={{ fontSize: 12, color: 'var(--color,#444)', fontWeight: 500 }}>{copied ? '✓ Copied!' : 'Copy Link'}</span>
           </button>
-          {/* Facebook */}
+       
           <button onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
             <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#e7f0fd', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
@@ -143,7 +143,7 @@ function ShareModal({ postId, onClose, onShared }: { postId: string; onClose: ()
 }
 
 export default function PostCard({ post, currentUserId, onDeleted,currentUser }: Props) {
-  // derive initial image list from post
+
   const getInitialImages = () => {
     const all: string[] = post.imageUrls?.length ? post.imageUrls : post.imageUrl ? [post.imageUrl] : []
     return all
@@ -160,8 +160,8 @@ export default function PostCard({ post, currentUserId, onDeleted,currentUser }:
   const [editing, setEditing] = useState(false)
   const [editContent, setEditContent] = useState(post.content)
   const [editVisibility, setEditVisibility] = useState(post.visibility)
-  const [editImages, setEditImages] = useState<string[]>(getInitialImages())      // existing URLs
-  const [editNewFiles, setEditNewFiles] = useState<{ file: File; preview: string }[]>([])  // newly added
+  const [editImages, setEditImages] = useState<string[]>(getInitialImages())     
+  const [editNewFiles, setEditNewFiles] = useState<{ file: File; preview: string }[]>([]) 
   const [saving, setSaving] = useState(false)
   const [content, setContent] = useState(post.content)
   const [visibility, setVisibility] = useState(post.visibility)
@@ -176,7 +176,7 @@ export default function PostCard({ post, currentUserId, onDeleted,currentUser }:
 )
 const totalComments = commentList.length + replyCount
 
-
+console.log(likes)
   
 
   useEffect(() => {
@@ -219,10 +219,10 @@ const handleEdit = async () => {
   setSaving(true)
 
   try {
-    // Step 1: Start with existing images
+  
     const uploadedUrls: string[] = [...editImages]
 
-    // Step 2: Upload new files to Cloudinary
+   
     for (const item of editNewFiles) {
       const fd = new FormData()
       fd.append('file', item.file)
@@ -241,7 +241,7 @@ const handleEdit = async () => {
       }
     }
 
-    // Step 3: Send patch request to update post
+    
     const res = await fetch(`/api/posts/${post.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -249,7 +249,7 @@ const handleEdit = async () => {
         content: editContent.trim() || (uploadedUrls.length > 0 ? '📷 Shared photos' : ''),
         visibility: editVisibility,
         imageUrls: uploadedUrls,
-        imageUrl: uploadedUrls[0] || null, // optional: update main image
+        imageUrl: uploadedUrls[0] || null, 
       }),
     })
 
@@ -257,12 +257,12 @@ const handleEdit = async () => {
       const data = await res.json()
       const newUrls = data.post.imageUrls || []
 
-      // Step 4: Update state
+      
       setContent(data.post.content)
       setVisibility(data.post.visibility)
-      setImageUrls(newUrls)   // instant render
-      setEditImages(newUrls)  // edit modal state update
-      setEditNewFiles([])     // clear new uploads
+      setImageUrls(newUrls)   
+      setEditImages(newUrls)  
+      setEditNewFiles([])     
       setEditing(false)
     }
   } finally {
@@ -302,7 +302,7 @@ const handleEdit = async () => {
               </div>
             </div>
 
-            {/* Dropdown */}
+          
             <div className="_feed_inner_timeline_post_box_dropdown" ref={dropdownRef}>
               <div className="_feed_timeline_post_dropdown">
                 <button type="button" className="_feed_timeline_post_dropdown_link" onClick={() => setShowDropdown(v => !v)}>
@@ -415,7 +415,7 @@ const handleEdit = async () => {
           </div>
         </div>
 
-        {/* Reaction bar */}
+       
         <div className="_feed_inner_timeline_reaction">
           <button className={`_feed_inner_timeline_reaction_emoji _feed_reaction${isLiked ? ' _feed_reaction_active' : ''}`} onClick={handleLike}>
             <span className="_feed_inner_timeline_reaction_link flex ">

@@ -37,7 +37,7 @@ function UserAvatar({
         width: '40px',
         height: '40px',
         objectFit: 'cover',
-        borderRadius: '50%', // circle
+        borderRadius: '50%', 
         display: 'block',
         
       }}
@@ -55,7 +55,7 @@ function UserAvatar({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: '50%', // circle
+        borderRadius: '50%', 
         userSelect: 'none',
       }}
     >
@@ -79,7 +79,7 @@ export default function CreatePost({ currentUser, onPost }: Props) {
       preview: URL.createObjectURL(f),
     }));
     setImages((prev) => [...prev, ...newItems]);
-    // reset so same files can be re-selected
+    
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -95,13 +95,13 @@ const handleSubmit = async () => {
   setLoading(true)
 
   try {
-    // Step 1: Upload all images to Cloudinary
+ 
     const uploadedUrls: string[] = []
     for (const item of images) {
       const formData = new FormData()
       formData.append("file", item.file)
 
-      // ✅ Cloudinary upload route
+      
       const res = await fetch("/api/uploadcloudinary", {
         method: "POST",
         body: formData,
@@ -117,18 +117,18 @@ const handleSubmit = async () => {
       }
     }
 
-    // Step 2: Prepare content
+   
     let finalContent = content.trim() || (images.length > 0 ? "" : "")
     const extraImages = uploadedUrls.slice(1)
 
-    // Step 3: Create post
+  
     const res = await fetch("/api/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         content: finalContent || (images.length > 0 ? "📷 Shared photos" : ""),
-        imageUrl: uploadedUrls[0] || null, // first image
-        imageUrls: uploadedUrls,           // all uploaded images
+        imageUrl: uploadedUrls[0] || null, 
+        imageUrls: uploadedUrls,          
         visibility,
       }),
     })
@@ -317,10 +317,10 @@ const handleSubmit = async () => {
         </div>
       )}
 
-      {/* Bottom toolbar */}
+      
       <div className="_feed_inner_text_area_bottom">
         <div className="_feed_inner_text_area_item">
-          {/* Photo button */}
+       
           <div className="_feed_inner_text_area_bottom_photo _feed_common">
             <button
               type="button"
@@ -353,7 +353,7 @@ const handleSubmit = async () => {
             />
           </div>
 
-          {/* Video */}
+
           <div className="_feed_inner_text_area_bottom_video _feed_common">
             <button
               type="button"
@@ -401,7 +401,7 @@ const handleSubmit = async () => {
           </div>
         </div>
 
-        {/* Post button */}
+      
         <div className="_feed_inner_text_area_btn">
           <button
             type="button"

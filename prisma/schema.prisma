@@ -20,6 +20,8 @@ model User {
   likes     Like[]
   posts     Post[]
   replies   Reply[]
+  stories        Story[]
+ storyReactions StoryReaction[]
 }
 
 model Post {
@@ -80,4 +82,31 @@ model Like {
   @@unique([userId, postId])
   @@unique([userId, commentId])
   @@unique([userId, replyId])
+}
+
+model Story {
+  id         String          @id @default(cuid())
+  type       String         
+  imageUrl   String?
+  text       String?
+  bgColor    String?
+  authorId   String
+  createdAt  DateTime        @default(now())
+  expiresAt  DateTime        
+
+  author     User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reactions  StoryReaction[]
+}
+
+model StoryReaction {
+  id        String   @id @default(cuid())
+  storyId   String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([storyId, userId]) 
 }

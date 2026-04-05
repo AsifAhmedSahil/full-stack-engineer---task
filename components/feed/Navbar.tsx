@@ -57,14 +57,14 @@ export default function Navbar({ user }: { user: User }) {
   const notifRef = useRef<HTMLLIElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
 
-  // Fetch notifications
+
   const fetchNotifications = async () => {
     try {
       const res = await fetch('/api/notifications')
       if (res.ok) {
         const data = await res.json()
         setNotifications(data.notifications)
-        // count unseen
+       
         const saved = localStorage.getItem('seen_notif_ids')
         const seen = saved ? new Set<string>(JSON.parse(saved)) : new Set<string>()
         setSeenIds(seen)
@@ -75,11 +75,11 @@ export default function Navbar({ user }: { user: User }) {
 
   useEffect(() => {
     fetchNotifications()
-    const interval = setInterval(fetchNotifications, 30000) // poll every 30s
+    const interval = setInterval(fetchNotifications, 30000) 
     return () => clearInterval(interval)
   }, [])
 
-  // Close dropdowns on outside click
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) setShowNotifDrop(false)
@@ -92,7 +92,7 @@ export default function Navbar({ user }: { user: User }) {
   const openNotifDrop = () => {
     setShowNotifDrop(v => !v)
     if (!showNotifDrop) {
-      // mark all as seen
+     
       const ids = notifications.map(n => n.id)
       const newSeen = new Set([...Array.from(seenIds), ...ids])
       setSeenIds(newSeen)
@@ -128,7 +128,6 @@ export default function Navbar({ user }: { user: User }) {
         <div className={`navbar-collapse${isMobileMenuOpen ? ' show' : ''}`} id="navbarSupportedContent"
           style={{ display: isMobileMenuOpen ? 'block' : 'flex', flexBasis: 'auto', flexGrow: 1, alignItems: 'center' }}>
 
-          {/* Search */}
           <div className="_header_form ms-auto">
             <form className="_header_form_grp">
               <svg className="_header_form_svg" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 17 17">
@@ -139,9 +138,9 @@ export default function Navbar({ user }: { user: User }) {
             </form>
           </div>
 
-          {/* Nav Links */}
+   
           <ul className="navbar-nav mb-2 mb-lg-0 _header_nav_list ms-auto _mar_r8">
-            {/* Home */}
+          
             <li className="nav-item _header_nav_item">
               <Link href="/feed" className="nav-link _header_nav_link_active _header_nav_link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="21" fill="none" viewBox="0 0 18 21">
@@ -151,7 +150,7 @@ export default function Navbar({ user }: { user: User }) {
               </Link>
             </li>
 
-            {/* Friends */}
+          
             <li className="nav-item _header_nav_item">
               <a className="nav-link _header_nav_link" href="#0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="20" fill="none" viewBox="0 0 26 20">
@@ -160,7 +159,7 @@ export default function Navbar({ user }: { user: User }) {
               </a>
             </li>
 
-            {/* Notifications — with real data */}
+            
             <li className="nav-item _header_nav_item" ref={notifRef} style={{ position: 'relative' }}>
               <span className="nav-link _header_nav_link _header_notify_btn" style={{ cursor: 'pointer' }} onClick={openNotifDrop}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" fill="none" viewBox="0 0 20 22">
@@ -170,7 +169,7 @@ export default function Navbar({ user }: { user: User }) {
                   <span className="_counting">{unreadCount > 9 ? '9+' : unreadCount}</span>
                 )}
 
-                {/* Notification Dropdown */}
+               
                 {showNotifDrop && (
                   <div className="_notification_dropdown show" style={{ display: 'block' }} onClick={e => e.stopPropagation()}>
                     <div className="_notifications_content">
@@ -208,7 +207,7 @@ export default function Navbar({ user }: { user: User }) {
               </span>
             </li>
 
-            {/* Chat */}
+        
             <li className="nav-item _header_nav_item">
               <a className="nav-link _header_nav_link" href="#0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="23" height="22" fill="none" viewBox="0 0 23 22">
